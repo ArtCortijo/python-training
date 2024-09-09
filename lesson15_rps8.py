@@ -1,15 +1,16 @@
-# Lesson 14 - Rock, Paper, Scissors
+# Lesson 15 - Rock, Paper, Scissors
 import sys
 import random
 from enum import Enum
 
 
-def rps():
+def rps(name='PlayerOne'):
     game_count = 0
     player_wins = 0
     python_wins = 0
 
     def play_rps():
+        nonlocal name
         nonlocal player_wins
         nonlocal python_wins
 
@@ -19,10 +20,10 @@ def rps():
             SCISSORS = 3
 
         playerChoice = input(
-            "\nEnter... \n1 for Rock\n2 for Paper\n3 for Scissors\n\n")
+            f"\n{name}, please enter... \n1 for Rock\n2 for Paper\n3 for Scissors\n\n")
 
         if playerChoice not in ['1', '2', '3']:
-            print("Invalid choice. You must enter 1, 2 or 3.")
+            print(f"{name}, please enter 1, 2 or 3.")
             return play_rps()
 
         player = int(playerChoice)
@@ -31,27 +32,28 @@ def rps():
         computer = int(computerChoice)
         # computerChoice = random.randint(1, 3)
 
-        print(f"\nYou chose: {str(RPS(player).name)}")
+        print(f"\n{name}, you chose: {str(RPS(player).name)}")
         print(f"Python chose: {str(RPS(computer).name)}\n")
 
         def decide_winner(player, computer):
+            nonlocal name
             nonlocal player_wins
             nonlocal python_wins
 
             if player == 1 and computer == 3:
                 player_wins += 1
-                return "Player wins! 🎉"
+                return f"{name} wins! 🎉"
             elif player == 2 and computer == 1:
                 player_wins += 1
-                return "Player wins! 🎉"
+                return f"{name} wins! 🎉"
             elif player == 3 and computer == 2:
                 player_wins += 1
-                return "Player wins! 🎉"
+                return f"{name} wins! 🎉"
             elif player == computer:
                 return "It's a tie! 😲"
             else:
                 python_wins += 1
-                return "Python wins! 🐍"
+                return f"Python wins! 🐍\n Sorry, {name}...🤷‍♂️"
 
         game_result = decide_winner(player, computer)
         print(game_result)
@@ -59,9 +61,9 @@ def rps():
         nonlocal game_count
         game_count += 1
 
-        print(f"\nGame count: {str(game_count)}")
-        print(f"\nPlayer wins: {str(player_wins)}")
-        print(f"\nPython wins: {str(python_wins)}")
+        print(f"\nGame count: {game_count}")
+        print(f"\n{name}'s wins: {player_wins}")
+        print(f"\nPython wins: {python_wins}")
 
         print("\nPlay again?")
 
@@ -78,13 +80,20 @@ def rps():
         else:
             print('\n🎉🎉🎉🎉')
             print("Thank you for playing!\n")
-            sys.exit("Goodbye!")
+            sys.exit(f"Goodbye {name}!")
             # break
 
     return play_rps
 
 
-rock_paper_scissors = rps()
-
 if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description='Provides a personalized game experience.')
+    parser.add_argument('-n', '--name', metavar='name',
+                        required=True, help='The name of the person playing the game.')
+    args = parser.parse_args()
+
+    rock_paper_scissors = rps(args.name)
     rock_paper_scissors()
